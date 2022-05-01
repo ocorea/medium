@@ -5,26 +5,22 @@ from botocore.client import Config
 
 class shorter:
     #Creation of the S3 BOTO Client
-    def __init__(self, region:str, iam_key:str, iam_secret:str, expiracion:int, domain:str, api_key:str):
-        print(iam_secret)
+    def __init__(self, region:str, iam_key:str, iam_secret:str, expiration:int, domain:str, api_key:str):
         self.iam_key=iam_key
         self.iam_secret = iam_secret
         self.region = region
         self.api_key = api_key
         self.domain = domain
-        self.expiracion = expiracion  # in seconds       
-        self.s3_client = boto3.client('s3',
-        region_name = self.region,
-        aws_access_key_id=self.iam_key,
-        aws_secret_access_key=self.iam_secret        
-        )
+        self.expiration = expiration  # in seconds       
+        self.s3_client = boto3.client('s3', region_name = self.region,
+        aws_access_key_id=self.iam_key, aws_secret_access_key=self.iam_secret)
 
     def getSignedURL(self, bucket:str, s3_object_key:str)->str:
         try:
             response = self.s3_client.generate_presigned_url(
             ClientMethod='get_object',
             Params={'Bucket': bucket, 'Key': s3_object_key},
-            ExpiresIn=self.expiracion)
+            ExpiresIn=self.expiration)
             return response
         except Exception as e:
             print('error: ',e)
